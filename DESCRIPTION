@@ -1,0 +1,25 @@
+Package: neaSG
+Type: Package
+Title: API Client For Singapore's National Environment Agency Data Hosted On Data.gov.sg
+Version: 0.1.0
+Authors@R: person("Andrew", "Loh", email = "al3825@columbia.edu",
+      role = c("aut", "cre"))
+Description: This is an API Client for Singapore's National Environment Agency data hosted on Data.gov.sg. There are 7 functions in this package. All but one gets data for a particular weather-related index or measure for a specified set of dates, while the last provides the locations, IDs and names of weather stations in Singapore. Air temperature data and humidity data are available for every minute. Rainfall data is available every 5 minutes. Pollutant and UV levels are available hourly.
+License: MIT + file LICENSE
+Encoding: UTF-8
+Imports: 
+    dplyr,
+    jsonlite,
+    data.table,
+    httr,
+    purrr,
+    magrittr,
+    lubridate,
+    stringr
+LazyData: true
+RoxygenNote: 6.1.1
+Suggests: 
+    knitr,
+    rmarkdown,
+    testthat
+VignetteBuilder: knitr

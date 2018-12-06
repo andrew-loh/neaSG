@@ -1,0 +1,91 @@
+---
+title: "Vignette Title"
+author: "Vignette Author"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+--- 
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+# neaSG
+
+R Interface for Singapore's Weather, UV and Pollutants Data from National Environment Agency (NEA) APIs.
+
+No API key is required for these APIs. The library can hence be installed without any authentication required.
+ 
+As a caveat, this API client will be significantly slower than other APIs, as the NEA APIs allow only for queries of individual dates, one at a time. This interface helps to automate the querying of a list of dates, and the tidying of appropriate data into tidy data frames.
+
+### To install
+```{r}
+library(devtools)
+install_github("andrew-loh/neaSG")
+```
+
+### Examples
+To list all functions supported by this package
+```{r}
+library(neaSG)
+ls(package::neaSG)
+```
+
+Air temperature, humidity and rainfall are given by weather station IDs. To get data frame of weather stations in Singapore by name, geographic coordinates and ID:
+```{r}
+get_weatherstns()
+```
+
+Temperature is provided in degrees Celsius. Documentation is provided [here](https://data.gov.sg/dataset/realtime-weather-readings?resource_id=17494bed-23e9-4b3b-ae89-232f87987163)
+To get data frame of per-minute air temperature in Singapore for specific dates:
+```{r}
+#Dates must be input as characters in a "YYYY-MM-DD" format
+data <- get_airtemp(from = "2017-12-31", to = "2018-01-04")
+data
+```
+
+Relative humidity is given as percentage, as is convention. Documentation is provided [here](https://data.gov.sg/dataset/realtime-weather-readings?resource_id=59eb2883-2ceb-4d16-85f0-7e3a3176ef46)
+To get data frame of per-minute relative humidity readings in Singapore for specific dates:
+```{r}
+#Dates must be input as characters in a "YYYY-MM-DD" format
+data <- get_humidity(from = "2017-12-31", to = "2018-01-04")
+data
+```
+
+Rainfall is given by mm/5-minutes. Documentation is provided [here](https://data.gov.sg/dataset/realtime-weather-readings?resource_id=8bd37e06-cdd7-4ca4-9ad8-5754eb70a33d)
+To get data frame of 5-minute rainfall readings in Singapore for specific dates:
+```{r}
+#Dates must be input as characters in a "YYYY-MM-DD" format
+data <- get_rainfall(from = "2017-12-31", to = "2018-01-04")
+data
+```
+
+UV Index provides data for hours when the sun is up - from 0700 to 1900hrs. As Singapore is a tropical country, sunrise and sunset times do not vary significantly through the year. Documentation is provided [here](https://data.gov.sg/dataset/ultraviolet-index-uvi)
+```{r}
+#Dates must be input as characters in a "YYYY-MM-DD" format
+data <- get_UV(from = "2017-12-31", to = "2018-01-04")
+data
+```
+
+Pollutants are given by hourly measures for respective indices. Data is provided for national and 5 subnational regions, in the form of 12 pollutant indices: O3 Sub-Index, PM10 24-hourly, PM10 Sub-Index, CO Sub-Index, PM2.5 24-Hourly, SO2 Sub-Index, CO 8-Hour-Max, NO2 1-Hour-Max, SO2 24-Hourly, PM2.5 Sub-Index, PSI 24-Hourly and O3 8-Hour Max. Documentation is provided [here](https://data.gov.sg/dataset/psi)
+
+Additional argument ```natl_only``` is, by default, ```TRUE```. If true, provides only national readings. If the user desires subnational readings, set ```natl_only = FALSE```
+```{r}
+#Dates must be input as characters in a "YYYY-MM-DD" format
+data <- get_rainfall(from = "2017-12-31", to = "2018-01-04")
+data
+```
+
+The final function aims to provide an hourly weather summary for specified dates. Hourly aggregated weather data on air temperature, humidity, rainfall, UV and PSI 24-Hourly readings will be returned as a data frame. As each separate API returns data of varying granularity - geographical or temporal, this summary will aggregate across all of Singapore and over each hour. Documentation for each separate index can be acquired from each of the separate functions above.
+```{r}
+data <- get_weathersumm(from = "2017-12-31", to = "2018-01-04")
+data
+```
+
+
